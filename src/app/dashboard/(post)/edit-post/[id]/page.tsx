@@ -1,12 +1,18 @@
 import React from 'react';
 import PostForm from "@/components/home/post-form";
+import prisma from "@/lib/db";
+import EditPostForm from "@/components/home/edit-post";
 
-function EditPost({params}: { params: { id: string } }) {
+async function Page(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const post = await prisma.post.findUnique({
+        where: {
+            id: params.id
+        }
+    })
     return (
-        <div>
-            <PostForm actionType="edit" id={params.id}/>
-        </div>
+        <PostForm actionType="edit" post={post || undefined}/>
     );
 }
 
-export default EditPost;
+export default Page;

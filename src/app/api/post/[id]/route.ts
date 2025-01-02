@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { postSchema } from "@/lib/validations";
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Parse the request body
     const body = await request.json();
@@ -44,6 +42,39 @@ export async function PATCH(
     return NextResponse.json(updatedPost);
   } catch (error) {
     console.error("Error updating post:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 } // Internal Server Error
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  try {
+    // Check if the post exists
+    const post = await prisma.post.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+    if (!post) {
+      return NextResponse.json(
+        { error: "Post not found" },
+        { status: 404 } // Not Found
+      );
+    }
+
+    // Delete the post
+    await prisma.post.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json({ message: "Post deleted" });
+  } catch (error) {
+    console.error("Error deleting post:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 } // Internal Server Error

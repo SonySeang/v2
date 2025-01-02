@@ -1,7 +1,8 @@
 import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { createPostSchema } from "@/lib/validations";
+import { postSchema } from "@/lib/validations";
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate the request body
-    const validation = createPostSchema.safeParse(body);
+    const validation = postSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(validation.error.errors, { status: 400 });
     }
@@ -37,7 +38,6 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         content,
-        communityId: communityId,
         User: {
           connect: {
             id: session.user.id,

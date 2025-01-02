@@ -17,7 +17,7 @@ import {deletePost} from "@/action/post";
 
 interface PostButtonProps {
     actionType: "edit" | "delete" | "create";
-    params?: {id : string};
+    params?: string;
 }
 
 function PostButton({actionType, params}: PostButtonProps) {
@@ -65,7 +65,7 @@ function PostButton({actionType, params}: PostButtonProps) {
                         <DialogClose asChild>
                             <Button
                                 variant="destructive"
-                                onClick={ async () => await deletePost(params?.id)}
+                                onClick={ async () => await deletePost(params)}
                             />
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>

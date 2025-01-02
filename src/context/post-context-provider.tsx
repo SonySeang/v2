@@ -1,10 +1,9 @@
 "use client"
-import React, {createContext, useState} from 'react';
+import React, {createContext,} from 'react';
 import {Post} from "@prisma/client";
 import {addPost, deletePost, editPost} from "@/action/post";
 import {PostEssentials} from "@/lib/types";
 import {useRouter} from "next/navigation";
-import {clientCredentialsGrantRequest} from "oauth4webapi";
 
 type PostContextProviderProps = {
     children: React.ReactNode,
@@ -24,6 +23,8 @@ function PostContextProvider(
     {children, data: posts}: PostContextProviderProps
 ) {
     const router = useRouter()
+
+
     //event handlers
     const handleAddPost = async (newPost: PostEssentials) => {
         const error = await addPost(newPost)
@@ -43,7 +44,7 @@ function PostContextProvider(
     const handleDeletePost = async (postId: Post["id"]) => {
         const error = await deletePost(postId)
         if (error) {
-            consol.log(error)
+            console.log(error)
         }
         router.push("/dashboard")
     }
