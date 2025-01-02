@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 import {
     Dialog,
     DialogClose,
@@ -12,20 +12,22 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import axios from "axios";
+import {usePostContext} from "@/lib/hook";
+import {deletePost} from "@/action/post";
 
 interface PostButtonProps {
     actionType: "edit" | "delete" | "create";
-    params?: string;
+    params?: {id : string};
 }
-function PostButton({ actionType, params } : PostButtonProps) {
+
+function PostButton({actionType, params}: PostButtonProps) {
     const router = useRouter();
 
-    const handleDelete = async () => {
-        await axios.delete(`/api/post/${params}`);
-        router.push("/dashboard");
-        router.refresh();
-    };
+    // const handleDelete = async () => {
+    //     await axios.delete(`/api/post/${params}`);
+    //     router.push("/dashboard");
+    //     router.refresh();
+    // };
     if (actionType === "create") {
         return (
             <Button
@@ -57,10 +59,14 @@ function PostButton({ actionType, params } : PostButtonProps) {
                         <DialogTitle>Are you sure you want to delete?</DialogTitle>
                     </DialogHeader>
                     <DialogDescription>
-                        <Button onClick={handleDelete}>Confirm</Button>
+
                     </DialogDescription>
                     <DialogFooter>
                         <DialogClose asChild>
+                            <Button
+                                variant="destructive"
+                                onClick={ async () => await deletePost(params?.id)}
+                            />
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                     </DialogFooter>

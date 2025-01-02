@@ -1,43 +1,57 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createPostShema, postSchema } from "@/lib/validations";
 import prisma from "@/lib/db";
+import { auth } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { createPostSchema } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  // Validate the request body
-  const validation = createPostShema.safeParse(body);
-  if (!validation.success) {
-    return NextResponse.json(validation.error.errors, { status: 400 });
-  }
+  try {
+    const body = await request.json();
 
-  const { title, content, assigntoCommunityId } = body;
-
-  if (assigntoCommunityId) {
-    const communitys = await prisma.community.findUnique({
-      where: {
-        id: assigntoCommunityId,
-      },
-    });
-    if (!communitys) {
-      return NextResponse.json(
-        { error: "Community not found" },
-        { status: 404 }
-      );
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  }
 
-  const newPost = await prisma.post.create({
-    data: {
-      title,
-      content,
-      communityId: assigntoCommunityId,
-      User: {
-        connect: {
-          id: session.userId,
+    // Validate the request body
+    const validation = createPostSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(validation.error.errors, { status: 400 });
+    }
+
+    const { title, content, communityId } = body;
+
+    if (communityId) {
+      const community = await prisma.community.findUnique({
+        where: {
+          id: communityId,
+        },
+      });
+      if (!community) {
+        return NextResponse.json(
+          { error: "Community not found" },
+          { status: 404 }
+        );
+      }
+    }
+    const newPost = await prisma.post.create({
+      data: {
+        title,
+        content,
+        communityId: communityId,
+        User: {
+          connect: {
+            id: session.user.id,
+          },
         },
       },
-    },
-  });
+    });
 
-  return NextResponse.json(newPost, { status: 201 });
+    return NextResponse.json(newPost, { status: 201 });
+  } catch (error) {
+    console.error("Error creating post:", error || error);
+    return NextResponse.json(
+      { error: "Failed to create post" },
+      { status: 500 }
+    );
+  }
 }

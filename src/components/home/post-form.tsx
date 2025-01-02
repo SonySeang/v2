@@ -1,104 +1,97 @@
 "use client";
 
+import React from "react";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 import "easymde/dist/easymde.min.css";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import axois from "axios";
-import { useRouter } from "next/navigation";
-import { postSchema } from "@/lib/validations";
-import SimpleMDE from "react-simplemde-editor";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {postSchema, TPostForm} from "@/lib/validations";
+import {useForm} from "react-hook-form";
 import FormButton from "./form-button";
-import { Post } from "@prisma/client";
-import ErrorMessage from "../error-message";
+import {Post} from "@prisma/client";
+import {usePostContext} from "@/lib/hook";
+import {Textarea} from "@/components/ui/textarea";
 
 interface PostFormProps {
-  actionType: "edit" | "create";
-  params?: { id: string };
-  post?: Post;
+    actionType: "edit" | "create";
+    params?: { id: string };
+    post?: Post;
 }
 
-export default function PostForm({ actionType, params, post }: PostFormProps) {
-  const router = useRouter();
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(postSchema),
-  });
+export default function PostForm({actionType, params, post}: PostFormProps) {
+    const {handleAddPost} = usePostContext();
+    const {
+        register,
+        trigger,
+        formState: {errors},
+        getValues,
+    } = useForm<TPostForm>({
+        resolver: zodResolver(postSchema),
+        defaultValues: {
+            title: post?.title || "",
+            content: post?.content || "",
+        }
+    });
+    return (
+        <Card className="w-full max-w-2xl mx-auto">
+            <CardHeader>
+                <CardTitle>
+                    {actionType === "create" ? "Create New Item" : "Edit Item"}
+                </CardTitle>
+                <CardDescription>
+                    Enter the title and description for your{" "}
+                    {actionType === "create" ? "new" : ""} item.
+                </CardDescription>
+            </CardHeader>
 
-  return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Create New Item</CardTitle>
-        <CardDescription>
-          Enter the title and description for your new item.
-        </CardDescription>
-      </CardHeader>
+            <form
+                action={async () => {
+                    const result = await trigger();
+                    if (!result) return;
+                    const postData = getValues();
 
-      <form
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            if (actionType === "edit") {
-              await axois.patch(`/api/post/${params?.id}`, data);
-              router.push("/dashboard");
-              console.log(data);
-            }
-            if (actionType === "create") {
-              await axois.post("/api/post", data);
-              router.push("/dashboard");
-              console.log(data);
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        })}
-      >
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              placeholder="Enter title"
-              {...register("title")}
-              defaultValue={post?.title}
-            />
-            {/* <ErrorMessage>{errors.}</ErrorMessage> */}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="content">Description</Label>
-            <Controller
-              name="content"
-              control={control}
-              defaultValue={post?.content}
-              render={({ field }) => (
-                <SimpleMDE
-                  id="content"
-                  placeholder="Enter description"
-                  {...field}
-                />
-              )}
-            />
-            {/* <ErrorMessage>{errors.content?.message}</ErrorMessage> */}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <FormButton actionType={actionType} />
-        </CardFooter>
-      </form>
-    </Card>
-  );
+                    if (actionType === "create") {
+                        await handleAddPost(postData);
+                    }
+
+                }}
+            >
+                <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                            id="title"
+                            placeholder="Enter title"
+                            {...register("title")}
+                        />
+                        {errors.title && (
+                            <p className="text-red-500">{errors.title.message}</p>
+                        )}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="content">Description</Label>
+                        <Textarea
+                            placeholder="Your Description"
+                            id="content"
+                            {...register("content")}
+                        />
+                        {errors.content && (
+                            <p className="text-red-500">{errors.content.message}</p>
+                        )}
+                    </div>
+                </CardContent>
+                <CardFooter>
+                    <FormButton actionType={actionType}/>
+                </CardFooter>
+            </form>
+        </Card>
+    );
 }

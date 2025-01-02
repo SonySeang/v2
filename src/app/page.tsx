@@ -1,6 +1,3 @@
-import AuthProvider from "@/app/dashboard/provider";
-import SignIn from "@/components/sign-in";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {

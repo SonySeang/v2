@@ -1,6 +1,3 @@
-import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-
 import Credentials from "next-auth/providers/credentials";
 import NextAuth, { NextAuthConfig } from "next-auth";
 import prisma from "@/lib/db";
@@ -20,9 +17,8 @@ const config = {
           },
         });
         if (!user) {
-          throw new Error("No user found"); 
+          throw new Error("No user found");
         }
-        
 
         const passwordsMatch = await bcrypt.compare(
           password,
@@ -30,7 +26,6 @@ const config = {
         );
         if (!passwordsMatch) {
           throw new Error("Invalid");
-          return null;
         }
 
         return user;
@@ -53,10 +48,23 @@ const config = {
       if (!isTryingToAccessApp) {
         return false;
       }
-      if (!isLoggingIn && !isTryingToAccessApp){
+      if (!isLoggingIn && !isTryingToAccessApp) {
         return true;
       }
-      return false
+      return false;
+    },
+    jwt: ({ token, user }) => {
+      if (user) {
+        // on sign in
+        token.userId = <string>user.id;
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (session.user) {
+        session.user.id = token.userId;
+      }
+      return session;
     },
   },
 } satisfies NextAuthConfig;
