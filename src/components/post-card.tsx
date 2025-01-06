@@ -8,22 +8,33 @@ import {Button} from "@/components/ui/button";
 import {ThumbsUp, MessageCircle, Share2} from "lucide-react";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import Link from "next/link";
-import PostButton from "@/components/post-button";
+import PostButton from "@/app/dashboard/_components/post-button";
 import DeletePost from "@/components/post-delete";
 import prisma from "@/lib/db";
+import {auth} from "@/lib/auth";
+import {redirect} from "next/navigation";
 
 interface PostCardProps {
-    actionType: "edit" | "delete" ;
-
+    actionType: "edit" | "delete";
 }
 
 export default async function PostCard() {
-    const posts = await prisma.post.findMany()
+    const session = await auth();
+    if (!session?.user) {
+        redirect("/log-in");
+    }
+    const posts = await prisma.post.findMany({
+        // where: {
+        //   userId: session.user.id,
+        // },
+    });
+
+    //   const posts = await prisma.post.findMany();
 
     return (
         <ScrollArea className="h-[calc(100vh-4rem)]">
             {posts.map((post) => (
-                <Link href={`/dashboard/post-detail/${post.id}`} key={post.id}>
+                <Link href={`/dashboard/${post.id}`} key={post.id}>
                     <Card className="w-full max-w-4xl mx-auto mb-4">
                         <CardHeader className="flex flex-row items-center gap-4">
                             {/*<Avatar>*/}

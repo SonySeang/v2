@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -10,62 +10,64 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import "easymde/dist/easymde.min.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import axois from "axios";
-import { useRouter } from "next/navigation";
-import { postSchema } from "@/lib/validations";
-import SimpleMDE from "react-simplemde-editor";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { postSchema, TPostForm } from "@/lib/validations";
+import { useForm } from "react-hook-form";
 import FormButton from "./form-button";
 import { Post } from "@prisma/client";
-import ErrorMessage from "../error-message";
+import { usePostContext } from "@/lib/hook";
+import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface PostFormProps {
   actionType: "edit" | "create";
-  params?: { id: string };
   post?: Post;
 }
 
-export default function PostForm({ actionType, params, post }: PostFormProps) {
+export default function PostForm({ actionType, post }: PostFormProps) {
   const router = useRouter();
+  const { handleAddPost } = usePostContext();
   const {
     register,
-    control,
-    handleSubmit,
+    trigger,
     formState: { errors },
-  } = useForm({
+    getValues,
+  } = useForm<TPostForm>({
     resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: post?.title || "",
+      content: post?.content || "",
+      communityId: post?.communityId || "",
+    },
   });
-
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Create New Item</CardTitle>
+        <CardTitle>
+          {actionType === "create" ? "Create New Item" : "Edit Item"}
+        </CardTitle>
         <CardDescription>
-          Enter the title and description for your new item.
+          Enter the title and description for your{" "}
+          {actionType === "create" ? "new" : ""} item.
         </CardDescription>
       </CardHeader>
-
       <form
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            if (actionType === "edit") {
-              await axois.patch(`/api/post/${params?.id}`, data);
-              router.push("/dashboard");
-              console.log(data);
-            }
-            if (actionType === "create") {
-              await axois.post("/api/post", data);
-              router.push("/dashboard");
-              console.log(data);
-            }
-          } catch (error) {
-            console.error(error);
+        action={async () => {
+          const result = await trigger();
+          if (!result) return;
+          const postData = getValues();
+
+          if (actionType === "create") {
+            await axios.post("/api/post", postData);
+            router.push("/dashboard");
+            // await handleAddPost(postData);
+          } else if (actionType === "edit") {
+            await axios.patch("/api/post/" + post?.id, postData);
+            router.push("/dashboard");
           }
-        })}
+        }}
       >
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -74,25 +76,33 @@ export default function PostForm({ actionType, params, post }: PostFormProps) {
               id="title"
               placeholder="Enter title"
               {...register("title")}
-              defaultValue={post?.title}
             />
-            {/* <ErrorMessage>{errors.}</ErrorMessage> */}
+            {errors.title && (
+              <p className="text-red-500">{errors.title.message}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="content">Description</Label>
-            <Controller
-              name="content"
-              control={control}
-              defaultValue={post?.content}
-              render={({ field }) => (
-                <SimpleMDE
-                  id="content"
-                  placeholder="Enter description"
-                  {...field}
-                />
-              )}
+            <Textarea
+              placeholder="Your Description"
+              id="content"
+              {...register("content")}
             />
-            {/* <ErrorMessage>{errors.content?.message}</ErrorMessage> */}
+            {errors.content && (
+              <p className="text-red-500">{errors.content.message}</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="communityId">CommunityId</Label>
+            <Input
+              id="communityId"
+              placeholder="Enter community"
+              {...register("communityId")}
+            />
+            {errors.communityId && (
+              <p className="text-red-500">{errors.communityId.message}</p>
+            )}
           </div>
         </CardContent>
         <CardFooter>

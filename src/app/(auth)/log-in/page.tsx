@@ -11,7 +11,7 @@ export default function LogIn() {
       <AuthForm actionType="login" />
       <p>
         No account?
-        <Link href="/new-user" className="text-blue-500">
+        <Link href="/sign-up" className="text-blue-500">
           {" "}
           Sign up{" "}
         </Link>

@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Search from "./search";
-import PostButton from "@/components/post-button";
-import {SignInButton} from "@/components/home/auth-button";
+import PostButton from "@/app/dashboard/_components/post-button";
+
 
 export default function NavBar() {
     return (

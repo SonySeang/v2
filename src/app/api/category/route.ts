@@ -1,22 +1,21 @@
 import prisma from "@/lib/db";
-import { categorySchema, communitySchema } from "@/lib/validations";
+import { categorySchema } from "@/lib/validations";
 import { NextRequest, NextResponse } from "next/server";
 
-async function POST(request: NextRequest) {
-  const body = await request.json()
-  const validation = categorySchema.safeParse(body)
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const validation = categorySchema.safeParse(body);
 
-  const { name , communityId } = body
+  const { name } = body;
 
   if (!validation.success) {
-    return NextResponse.json(validation.error.errors, { status: 400 })
+    return NextResponse.json(validation.error.errors, { status: 400 });
   }
 
-  prisma.category.create({
+  const newCategory = await prisma.category.create({
     data: {
       name,
-      communityId
-    }
-  })
-  
+    },
+  });
+  return NextResponse.json(newCategory, { status: 201 });
 }
