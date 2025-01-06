@@ -23,15 +23,18 @@ export default function AssignCommunity({
     queryKey: ["community"],
     queryFn: () => axios.get("/api/community").then((res) => res.data),
   });
+
   if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading communities</div>;
+
   return (
     <Select
       onValueChange={(communityId) => {
-        axios.post("api/post", { communityId: community });
+        axios.post("/api/post", { communityId : communityId });
       }}
     >
       <SelectTrigger>
-        <SelectValue placeholder="Community" />
+        <SelectValue placeholder="Select a community" />
       </SelectTrigger>
       <SelectContent>
         {communities?.map((com) => (

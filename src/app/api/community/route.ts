@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { communitySchema } from "@/lib/validations";
 import prisma from "@/lib/db";
+import { communitySchema } from "@/lib/validations";
+import { auth } from "@/lib/auth";
+import { checkAuth } from "@/lib/server-util";
+import { communityDataInclude } from "@/lib/include";
 
 export async function POST(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await request.json();
   const validation = communitySchema.safeParse(body);
 
@@ -30,7 +38,16 @@ export async function POST(request: NextRequest) {
     const community = await prisma.community.create({
       data: {
         name,
-        categoryId,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+        User: {
+          connect: {
+            id: session.user.id,
+          },
+        },
       },
     });
 
@@ -44,11 +61,22 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  const community = await prisma.community.findMany({
-    orderBy: {
-      name: "desc",
-    },
-  });
+  try {
+    const user = await checkAuth();
 
-  return NextResponse.json(community);
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const communities = await prisma.community.findMany({
+      include: communityDataInclude,
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(communities);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Failed to fetch communities" },
+      { status: 500 }
+    );
+  }
 }

@@ -4,3 +4,4 @@ export type PostEssentials = Omit<
     Post,
     "id" | "createdAt" | "updatedAt" | "userId"
 >;
+

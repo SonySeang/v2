@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { postSchema } from "@/lib/validations";
 
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -18,8 +17,7 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
       return NextResponse.json(validation.error.errors, { status: 400 });
     }
-
-    const { title, content, communityId } = body;
+    const { title, content, communityId } = validation.data;
 
     if (communityId) {
       const community = await prisma.community.findUnique({
@@ -34,11 +32,17 @@ export async function POST(request: NextRequest) {
         );
       }
     }
+
     const newPost = await prisma.post.create({
       data: {
         title,
         content,
-        User: {
+        community: {
+          connect: {
+            id: communityId,
+          },
+        },
+        user: {
           connect: {
             id: session.user.id,
           },
@@ -47,8 +51,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(newPost, { status: 201 });
-  } catch (error) {
-    console.error("Error creating post:", error || error);
+  } catch (error: any) {
+    console.error("Error creating post:", error.message || error);
     return NextResponse.json(
       { error: "Failed to create post" },
       { status: 500 }

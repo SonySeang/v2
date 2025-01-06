@@ -27,7 +27,7 @@ interface PostFormProps {
 }
 
 export default function PostForm({ actionType, post }: PostFormProps) {
-    const router = useRouter()
+  const router = useRouter();
   const { handleAddPost } = usePostContext();
   const {
     register,
@@ -39,6 +39,7 @@ export default function PostForm({ actionType, post }: PostFormProps) {
     defaultValues: {
       title: post?.title || "",
       content: post?.content || "",
+      communityId: post?.communityId || "",
     },
   });
   return (
@@ -59,11 +60,13 @@ export default function PostForm({ actionType, post }: PostFormProps) {
           const postData = getValues();
 
           if (actionType === "create") {
-            await handleAddPost(postData);
-          }else if (actionType === "edit") {
-            await axios.patch("/api/post/" + post?.id, postData); 
+            await axios.post("/api/post", postData);
             router.push("/dashboard");
-            };
+            // await handleAddPost(postData);
+          } else if (actionType === "edit") {
+            await axios.patch("/api/post/" + post?.id, postData);
+            router.push("/dashboard");
+          }
         }}
       >
         <CardContent className="space-y-4">
@@ -87,6 +90,18 @@ export default function PostForm({ actionType, post }: PostFormProps) {
             />
             {errors.content && (
               <p className="text-red-500">{errors.content.message}</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="communityId">CommunityId</Label>
+            <Input
+              id="communityId"
+              placeholder="Enter community"
+              {...register("communityId")}
+            />
+            {errors.communityId && (
+              <p className="text-red-500">{errors.communityId.message}</p>
             )}
           </div>
         </CardContent>
