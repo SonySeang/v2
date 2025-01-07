@@ -23,8 +23,6 @@ export default function CommunityForm({
   const router = useRouter();
   const {
     register,
-    getValues,
-    trigger,
     handleSubmit,
     formState: { errors },
   } = useForm<TCommunityForm>({
@@ -38,12 +36,14 @@ export default function CommunityForm({
     <div>
       <form
         onSubmit={handleSubmit(async (data) => {
-          await axios.post("/api/community", data);
-          router.push("/dashboard");
+          if (actionType === "create") {
+            await axios.post("/api/community", data);
+            router.push("/dashboard/community");
+          } else if (actionType === "edit") {
+            await axios.patch("/api/community/" + community?.id, data);
+            router.push("/dashboard/community/list/" + community?.id);
+          }
         })}
-        // onSubmit={handleSubmit(async (data) => {
-        //   await createCommunity(data);
-        // })}
       >
         <div>
           <Label htmlFor="name">Community Name</Label>

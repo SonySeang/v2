@@ -16,7 +16,6 @@ import { postSchema, TPostForm } from "@/lib/validations";
 import { useForm } from "react-hook-form";
 import FormButton from "./form-button";
 import { Post } from "@prisma/client";
-import { usePostContext } from "@/lib/hook";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,6 @@ interface PostFormProps {
 
 export default function PostForm({ actionType, post }: PostFormProps) {
   const router = useRouter();
-  const { handleAddPost } = usePostContext();
   const {
     register,
     trigger,

@@ -25,7 +25,7 @@ interface PostFormProps {
 }
 
 export default function EditPostForm({actionType, post}: PostFormProps) {
-    const {handleAddPost, handleEditPost} = usePostContext();
+    const {handleEditPost} = usePostContext();
     const {
         register,
         trigger,

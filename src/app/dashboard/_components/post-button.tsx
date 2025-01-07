@@ -12,15 +12,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { usePostContext } from "@/lib/hook";
 import { deletePost } from "@/action/action";
 
 interface PostButtonProps {
   actionType: "edit" | "delete" | "create";
-  params?: { id: string };
+  param: string;
 }
 
-function PostButton({ actionType, params }: PostButtonProps) {
+function PostButton({ actionType, param }: PostButtonProps) {
   const router = useRouter();
   if (actionType === "create") {
     return (
@@ -36,7 +35,7 @@ function PostButton({ actionType, params }: PostButtonProps) {
     return (
       <Button
         variant="default"
-        onClick={() => router.push(`/dashboard/edit-post/${params}`)}
+        onClick={() => router.push(`/dashboard/edit-post/${param}`)}
       >
         Edit
       </Button>
@@ -57,7 +56,7 @@ function PostButton({ actionType, params }: PostButtonProps) {
             <DialogClose asChild>
               <Button
                 variant="destructive"
-                onClick={async () => await deletePost(params?.id)}
+                onClick={async () => await deletePost(param)}
               />
               <Button variant="secondary">Cancel</Button>
             </DialogClose>

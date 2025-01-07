@@ -118,6 +118,7 @@ export async function deletePost(postId: unknown) {
       },
     });
   } catch (error) {
+    console.log(error);
     return {
       error: "Failed to delete post",
       status: 500,

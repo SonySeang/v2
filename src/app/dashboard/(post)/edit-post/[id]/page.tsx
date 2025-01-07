@@ -1,7 +1,6 @@
 import React from 'react';
 import PostForm from "@/components/home/post-form";
 import prisma from "@/lib/db";
-import EditPostForm from "@/components/home/edit-post";
 
 async function Page(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;

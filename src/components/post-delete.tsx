@@ -1,8 +1,5 @@
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
-import prisma from "@/lib/db";
-import { Post } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -10,7 +7,7 @@ import { useRouter } from "next/navigation";
 //   param: { id: string };
 // }
 
-function DeletePost({ postId }: { postId: String }) {
+function DeletePost({ postId }: { postId: string }) {
   const router = useRouter();
 
   const deletePost = async () => {

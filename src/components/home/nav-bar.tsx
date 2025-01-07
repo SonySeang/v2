@@ -18,7 +18,7 @@ export default function NavBar() {
                 <Search/>
             </div>
             <div className="flex items-center">
-                <PostButton actionType="create"/>
+                <PostButton actionType="create" param=""/>
                 {/* <SignInButton/> */}
             </div>
         </header>

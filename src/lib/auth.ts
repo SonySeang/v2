@@ -8,7 +8,7 @@ const config = {
   },
   providers: [
     Credentials({
-      async authorize(credentials, request) {
+      async authorize(credentials) {
         //runs on sign in
         const { email, password } = credentials;
         const user = await prisma.user.findUnique({

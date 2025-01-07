@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { communitySchema } from "@/lib/validations";
+import { postDataInclude } from "@/lib/include";
 
 export async function PATCH(
   request: NextRequest,
@@ -81,6 +82,42 @@ export async function DELETE(
     return NextResponse.json({ message: "Community deleted" });
   } catch (error) {
     console.error("Error deleting community:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 } // Internal Server Error
+    );
+  }
+}
+
+export async function GET(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  const params = await props.params;
+  try {
+    // Check if the community exists
+    const community = await prisma.community.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+    if (!community) {
+      return NextResponse.json(
+        { error: "Community not found" },
+        { status: 404 } // Not Found
+      );
+    }
+
+    const Newposts = await prisma.post.findMany({
+      where: {
+        communityId: community.id,
+      },
+      include: postDataInclude,
+    });
+
+    return NextResponse.json(community);
+  } catch (error) {
+    console.error("Error getting community:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 } // Internal Server Error

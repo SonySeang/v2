@@ -1,27 +1,31 @@
 import { Prisma } from "@prisma/client";
 
+export const userDataSelect = {
+  id: true,
+  name: true,
+  email: true,
+  image: true,
+} satisfies Prisma.UserSelect;
 
 export const postDataInclude = {
   user: {
-    select: {
-        name: true,
-        image: true,
-    }
+    select: userDataSelect,
   },
 } satisfies Prisma.PostInclude;
 
 export const postDataSelect = {
+  id: true,
   title: true,
   content: true,
-  
 } satisfies Prisma.PostSelect;
 
 export const communityDataInclude = {
   posts: {
-    select: postDataInclude,
+    include: {
+      user: true,
+    },
   },
 } satisfies Prisma.CommunityInclude;
-
 
 export const communityDataSelect = {
   id: true,
@@ -30,4 +34,8 @@ export const communityDataSelect = {
 
 export type CommunityData = Prisma.CommunityGetPayload<{
   include: typeof communityDataInclude;
+}>;
+
+export type PostData = Prisma.PostGetPayload<{
+  include: typeof postDataInclude;
 }>;

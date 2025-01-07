@@ -8,15 +8,11 @@ import {Button} from "@/components/ui/button";
 import {ThumbsUp, MessageCircle, Share2} from "lucide-react";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import Link from "next/link";
-import PostButton from "@/app/dashboard/_components/post-button";
-import DeletePost from "@/components/post-delete";
+
 import prisma from "@/lib/db";
 import {auth} from "@/lib/auth";
 import {redirect} from "next/navigation";
 
-interface PostCardProps {
-    actionType: "edit" | "delete";
-}
 
 export default async function PostCard() {
     const session = await auth();
