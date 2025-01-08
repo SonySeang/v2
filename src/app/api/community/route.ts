@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(community, { status: 201 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: "Failed to create community" },
       { status: 500 }

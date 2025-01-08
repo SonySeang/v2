@@ -21,7 +21,7 @@ export async function addPost(postData: unknown) {
   }
 
   try {
-    // const newPost = 
+    // const newPost =
     await prisma.post.create({
       data: {
         title: validation.data.title,
@@ -118,6 +118,7 @@ export async function deletePost(postId: unknown) {
       },
     });
   } catch (error) {
+    console.log(error);
     return {
       error: "Failed to delete post",
       status: 500,

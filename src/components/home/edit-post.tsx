@@ -25,7 +25,7 @@ interface PostFormProps {
 }
 
 export default function EditPostForm({actionType, post}: PostFormProps) {
-    const {handleAddPost, handleEditPost} = usePostContext();
+    const {handleEditPost} = usePostContext();
     const {
         register,
         trigger,
@@ -85,7 +85,7 @@ export default function EditPostForm({actionType, post}: PostFormProps) {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <FormButton actionType={actionType}/>
+                    <FormButton actionType={actionType} isSubmitting/>
                 </CardFooter>
             </form>
         </Card>

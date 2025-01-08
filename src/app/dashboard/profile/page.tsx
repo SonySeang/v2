@@ -1,6 +1,6 @@
 import SignOutBtn from "@/components/auth/sign-out-btn";
 import ContentBlock from "@/components/content-block";
-import { Button } from "@/components/ui/button";
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default async function page() {
     <ContentBlock>
       <div>Login As .....</div>
       <p>{session?.user?.email}</p>
-<SignOutBtn/>
+      <SignOutBtn />
     </ContentBlock>
   );
 }

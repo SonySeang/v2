@@ -3,17 +3,22 @@ import prisma from "@/lib/db";
 import React from "react";
 
 interface CommunityEditProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function ({ params }: CommunityEditProps) {
+export default async function CommunityEdit({ params }: Awaited<CommunityEditProps>) {
+  const { id } = await params;
+
   const community = await prisma.community.findUnique({
     where: {
-      id: params.id,
+      id,
     },
+    
   });
+
   if (!community) {
     return <div>Community not found</div>;
   }
+
   return <CommunityForm actionType="edit" community={community} />;
 }

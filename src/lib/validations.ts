@@ -8,7 +8,6 @@ export const postSchema = z.object({
 });
 export type TPostForm = z.infer<typeof postSchema>;
 
-
 export const communitySchema = z.object({
   name: z.string().min(1, { message: "Please give your community a name" }),
   categoryId: z
@@ -23,3 +22,10 @@ export const communityId = z.string().cuid();
 export const categorySchema = z.object({
   name: z.string().min(1, { message: "Please give your category a name" }),
 });
+
+export const authFormSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(2, "Password must be at least 6 characters"),
+});
+
+export type TauthForm = z.infer<typeof authFormSchema>;

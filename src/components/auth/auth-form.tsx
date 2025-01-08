@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -11,18 +12,32 @@ interface AuthFormProps {
 
 export default function AuthForm({ actionType }: AuthFormProps) {
   return (
-    <form action={actionType === "login" ? logIn : signUp}>
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" name="email" />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input type="password" id="password" name="password" />
-      </div>
-      <Button className="mt-2 my-2 rounded-xl" type="submit">
-        {actionType === "login" ? "Sign in" : "Sign up"}
-      </Button>
-    </form>
+    <div>
+      <form action={ actionType === "login" ? logIn : signUp}>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            required
+            maxLength={100}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            required
+            maxLength={100}
+          />
+        </div>
+        <Button className="mt-2 my-2 rounded-xl" type="submit">
+          {actionType === "login" ? "Sign in" : "Sign up"}
+        </Button>
+      </form>
+    </div>
   );
 }

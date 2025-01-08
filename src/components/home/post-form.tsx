@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import {
   Card,
@@ -10,16 +11,22 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import "easymde/dist/easymde.min.css";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postSchema, TPostForm } from "@/lib/validations";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import FormButton from "./form-button";
 import { Post } from "@prisma/client";
-import { usePostContext } from "@/lib/hook";
-import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import useCommunity from "@/lib/hook";
 
 interface PostFormProps {
   actionType: "edit" | "create";
@@ -27,13 +34,13 @@ interface PostFormProps {
 }
 
 export default function PostForm({ actionType, post }: PostFormProps) {
+  const { data: communities } = useCommunity();
   const router = useRouter();
-  const { handleAddPost } = usePostContext();
   const {
     register,
-    trigger,
-    formState: { errors },
-    getValues,
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
   } = useForm<TPostForm>({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -42,33 +49,33 @@ export default function PostForm({ actionType, post }: PostFormProps) {
       communityId: post?.communityId || "",
     },
   });
+
+  const onSubmit = async (data: TPostForm) => {
+    try {
+      if (actionType === "create") {
+        await axios.post("/api/post", data);
+      } else if (actionType === "edit" && post) {
+        await axios.patch(`/api/post/${post.id}`, data);
+      }
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      // You might want to add some error handling here, e.g., showing an error message to the user
+    }
+  };
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>
-          {actionType === "create" ? "Create New Item" : "Edit Item"}
+          {actionType === "create" ? "Create New Post" : "Edit Post"}
         </CardTitle>
         <CardDescription>
-          Enter the title and description for your{" "}
-          {actionType === "create" ? "new" : ""} item.
+          Enter the details for your {actionType === "create" ? "new" : ""}{" "}
+          post.
         </CardDescription>
       </CardHeader>
-      <form
-        action={async () => {
-          const result = await trigger();
-          if (!result) return;
-          const postData = getValues();
-
-          if (actionType === "create") {
-            await axios.post("/api/post", postData);
-            router.push("/dashboard");
-            // await handleAddPost(postData);
-          } else if (actionType === "edit") {
-            await axios.patch("/api/post/" + post?.id, postData);
-            router.push("/dashboard");
-          }
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
@@ -78,7 +85,7 @@ export default function PostForm({ actionType, post }: PostFormProps) {
               {...register("title")}
             />
             {errors.title && (
-              <p className="text-red-500">{errors.title.message}</p>
+              <p className="text-sm text-red-500">{errors.title.message}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -89,24 +96,38 @@ export default function PostForm({ actionType, post }: PostFormProps) {
               {...register("content")}
             />
             {errors.content && (
-              <p className="text-red-500">{errors.content.message}</p>
+              <p className="text-sm text-red-500">{errors.content.message}</p>
             )}
           </div>
-
-          <div>
-            <Label htmlFor="communityId">CommunityId</Label>
-            <Input
-              id="communityId"
-              placeholder="Enter community"
-              {...register("communityId")}
+          <div className="space-y-2">
+            <Label htmlFor="communityId">Community</Label>
+            <Controller
+              name="communityId"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a community" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {communities?.map((community) => (
+                      <SelectItem key={community.id} value={community.id}>
+                        {community.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             />
             {errors.communityId && (
-              <p className="text-red-500">{errors.communityId.message}</p>
+              <p className="text-sm text-red-500">
+                {errors.communityId.message}
+              </p>
             )}
           </div>
         </CardContent>
         <CardFooter>
-          <FormButton actionType={actionType} />
+          <FormButton actionType={actionType} isSubmitting={isSubmitting} />
         </CardFooter>
       </form>
     </Card>
