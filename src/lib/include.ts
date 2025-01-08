@@ -11,6 +11,12 @@ export const postDataInclude = {
   user: {
     select: userDataSelect,
   },
+  community: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
 } satisfies Prisma.PostInclude;
 
 export const postDataSelect = {
@@ -25,6 +31,7 @@ export const communityDataInclude = {
       user: true,
     },
   },
+  category : true
 } satisfies Prisma.CommunityInclude;
 
 export const communityDataSelect = {

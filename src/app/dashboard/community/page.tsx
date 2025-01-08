@@ -1,5 +1,4 @@
 import AddCommunity from "@/components/community/add-community";
-import CommunityButton from "@/app/dashboard/community/list/[id]/community-btn";
 import ListCommunity from "@/components/community/list-community";
 import ContentBlock from "@/components/content-block";
 import React from "react";

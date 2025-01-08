@@ -1,5 +1,4 @@
 import React from "react";
-import { Separator } from "@/components/ui/separator";
 import ContentBlock from "@/components/content-block";
 
 export default function layout({ children }: { children: React.ReactNode }) {

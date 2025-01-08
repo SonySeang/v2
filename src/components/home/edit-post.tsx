@@ -85,7 +85,7 @@ export default function EditPostForm({actionType, post}: PostFormProps) {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <FormButton actionType={actionType}/>
+                    <FormButton actionType={actionType} isSubmitting/>
                 </CardFooter>
             </form>
         </Card>

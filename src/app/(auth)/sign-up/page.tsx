@@ -1,4 +1,3 @@
-
 import AuthForm from "@/components/auth/auth-form";
 import Link from "next/link";
 import React from "react";

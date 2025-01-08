@@ -18,10 +18,11 @@ import {
 } from "@/components/ui/popover";
 
 interface CommunityListIdPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function page({ params }: CommunityListIdPageProps) {
+export default async function page(props: CommunityListIdPageProps) {
+  const params = await props.params;
   const community = await prisma.community.findUnique({
     where: {
       id: params.id,

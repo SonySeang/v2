@@ -3,15 +3,13 @@ import ContentBlock from "@/components/content-block";
 import SideBar from "@/components/home/side-bar";
 import NavBar from "@/components/home/nav-bar";
 import AuthProvider from "@/app/dashboard/provider";
-import PostContextProvider from "@/context/post-context-provider";
-import prisma from "@/lib/db";
+
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps) {
-  const post = await prisma.post.findMany();
+export default  function Layout({ children }: LayoutProps) {
   return (
     <AuthProvider>
       <div>
@@ -21,9 +19,7 @@ export default async function Layout({ children }: LayoutProps) {
             <SideBar />
           </ContentBlock>
           <div className="col-start-3 col-span-7 border-r-2">
-            <PostContextProvider data={post}>
               <ContentBlock>{children}</ContentBlock>
-            </PostContextProvider>
           </div>
         </div>
       </div>

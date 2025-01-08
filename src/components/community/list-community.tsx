@@ -3,10 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { Card, CardHeader, CardFooter, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { CommunityData } from "@/lib/include";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 export default function ListCommunity() {

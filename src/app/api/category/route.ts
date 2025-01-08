@@ -19,3 +19,13 @@ export async function POST(request: NextRequest) {
   });
   return NextResponse.json(newCategory, { status: 201 });
 }
+
+export async function GET() {
+  const categorys = await prisma.category.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+  return NextResponse.json(categorys, { status: 200 });
+}

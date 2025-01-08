@@ -115,7 +115,7 @@ export async function GET(
       include: postDataInclude,
     });
 
-    return NextResponse.json(community);
+    return NextResponse.json(Newposts);
   } catch (error) {
     console.error("Error getting community:", error);
     return NextResponse.json(

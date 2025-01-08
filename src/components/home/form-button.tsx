@@ -1,17 +1,27 @@
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-import { Button } from "../ui/button";
+interface FormButtonProps {
+  actionType: "edit" | "create";
+  isSubmitting: boolean;
+}
 
-type PostFormBtnProps = {
-  actionType: "create" | "edit";
-};
-export default function FormButton({ actionType }: PostFormBtnProps) {
+export default function FormButton({
+  actionType,
+  isSubmitting,
+}: FormButtonProps) {
   return (
-    <Button
-      type="submit"
-      className="mt-5 self-end"
-    
-    >
-      {actionType === "create" ? "Add a new Post" : "Edit Post"}
+    <Button type="submit" disabled={isSubmitting}>
+      {isSubmitting ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          {actionType === "create" ? "Creating..." : "Updating..."}
+        </>
+      ) : actionType === "create" ? (
+        "Create Post"
+      ) : (
+        "Update Post"
+      )}
     </Button>
   );
 }
