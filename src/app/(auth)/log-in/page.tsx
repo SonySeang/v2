@@ -1,9 +1,9 @@
 "use client";
 
 import AuthForm from "@/components/auth/auth-form";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import GoogleLogin from "../_component/GoogleLogin";
 
 export default function LogIn() {
   return (
@@ -17,8 +17,7 @@ export default function LogIn() {
         </Link>
         .
       </p>
-      <h1>Sign in with Google</h1>
-      <button onClick={() => signIn("google")}>GOOGLE</button>
+      <GoogleLogin />
     </main>
   );
 }

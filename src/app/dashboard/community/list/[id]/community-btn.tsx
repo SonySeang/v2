@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { Button } from "../../../../../components/ui/button";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface CommunityButtonProps {
   type: "edit" | "delete";
@@ -27,7 +27,7 @@ export default function CommunityButton({
       variant="destructive"
       onClick={() => router.push(`/dashboard/community/delete${params}`)}
     >
-      delete
+      Delete
     </Button>
   );
 }

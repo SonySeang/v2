@@ -1,4 +1,5 @@
 import { Post } from "@prisma/client";
+import { PostData } from "./include";
 
 export type PostEssentials = Omit<
   Post,
@@ -6,21 +7,5 @@ export type PostEssentials = Omit<
 >;
 
 export interface PostCardProps {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: Date;
-    user: {
-      name: string | null;
-      image: string | null;
-    };
-    community: {
-      name: string;
-    };
-    // _count: {
-    //   likes: number;
-    //   comments: number;
-    // };
-  };
+  post: PostData;
 }

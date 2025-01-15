@@ -1,10 +1,8 @@
-"use client";
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { logIn, signUp } from "@/action/auth";
-
+import { logIn, signUp } from "@/action/action";
 
 interface AuthFormProps {
   actionType: "login" | "signup";
@@ -13,7 +11,7 @@ interface AuthFormProps {
 export default function AuthForm({ actionType }: AuthFormProps) {
   return (
     <div>
-      <form action={ actionType === "login" ? logIn : signUp}>
+      <form action={actionType === "login" ? logIn : signUp}>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input

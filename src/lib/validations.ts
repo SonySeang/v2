@@ -29,3 +29,16 @@ export const authFormSchema = z.object({
 });
 
 export type TauthForm = z.infer<typeof authFormSchema>;
+
+export const updateProfileSchema = z.object({
+  name: z.string().trim().min(1, "Cannot be empty"),
+});
+
+export type UpdateProfileValues = z.infer<typeof updateProfileSchema>;
+
+
+export const UserSchema = z.object({
+  email: z.string().email(),
+  hashedpassword: z.string(),
+  name: z.string(),
+})

@@ -1,7 +1,10 @@
+'use server'
 import prisma from "@/lib/db";
-import { auth } from "@/lib/auth";
+
 import { revalidatePath } from "next/cache";
 import { communitySchema } from "@/lib/validations";
+import { auth } from "@/lib/auth";
+
 
 export async function createCommunity(input: {
   name: string;
@@ -26,7 +29,7 @@ export async function createCommunity(input: {
             id: categoryId,
           },
         },
-        User: {
+        user: {
           connect: {
             id: session.user.id,
           },

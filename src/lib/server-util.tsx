@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
+
+import prisma from "./db";
 import { auth } from "./auth";
 import { Post, User } from "@prisma/client";
-import prisma from "./db";
 
 export async function checkAuth() {
   const session = await auth();

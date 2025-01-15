@@ -34,6 +34,9 @@ interface PostFormProps {
 }
 
 export default function PostForm({ actionType, post }: PostFormProps) {
+
+
+
   const { data: communities } = useCommunity();
   const router = useRouter();
   const {

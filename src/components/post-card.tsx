@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -10,17 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  ThumbsUp,
-  MessageCircle,
-  Share2,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { MessageCircle, Share2, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PostCardProps } from "@/lib/types";
+import LikeButton from "./like-button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function PostCard({ post }: PostCardProps) {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = (e: React.MouseEvent) => {
@@ -41,9 +38,12 @@ export function PostCard({ post }: PostCardProps) {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <p className="text-sm font-semibold">
-            {post.user.name || "Anonymous"}
-          </p>
+          <Link
+            href={`/dashboard/profile/${post.userId}`}
+            className="text-sm font-semibold hover:underline line-clamp-1"
+          >
+            {post.user.email ? post.user.email.split("@")[0] : "Anonymous"}
+          </Link>
           <p className="text-xs text-muted-foreground">
             {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
           </p>
@@ -52,7 +52,10 @@ export function PostCard({ post }: PostCardProps) {
           {post.community.name}
         </Badge>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent
+        className="space-y-2 hover:bg-gray-100 p-4 cursor-pointer"
+        onClick={() => router.push(`/dashboard/${post.id}`)}
+      >
         <h2 className="text-xl font-bold">{post.title}</h2>
         <p
           className={`text-muted-foreground ${
@@ -80,13 +83,18 @@ export function PostCard({ post }: PostCardProps) {
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="ghost" size="sm">
-          <ThumbsUp className="w-4 h-4 mr-2" />
-          {/* {post._count.likes} */} like
-        </Button>
+        <LikeButton
+          id={post.id}
+          initialState={{
+            likes: post._count.like,
+            isLikeByUser: post.like.some(
+              (like) => like.userId === post.user.id
+            ),
+          }}
+        />
         <Button variant="ghost" size="sm">
           <MessageCircle className="w-4 h-4 mr-2" />
-          {/* {post._count.comments} */} comment 
+          {/* {post._count.comments} */} comment
         </Button>
         <Button variant="ghost" size="sm">
           <Share2 className="w-4 h-4 mr-2" />

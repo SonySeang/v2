@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { communitySchema } from "@/lib/validations";
-import { auth } from "@/lib/auth";
 import { checkAuth } from "@/lib/server-util";
 import { communityDataInclude } from "@/lib/include";
 
+
+
 export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user) {
+  const session = await checkAuth();
+  if (!session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
             id: categoryId,
           },
         },
-        User: {
+        user: {
           connect: {
             id: session.user.id,
           },

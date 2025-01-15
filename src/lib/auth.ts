@@ -3,7 +3,8 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "./server-util";
 import { authFormSchema } from "./validations";
-import Google from "next-auth/providers/google"
+import Google from "next-auth/providers/google";
+
 const config = {
   pages: {
     signIn: "/log-in",
@@ -33,7 +34,10 @@ const config = {
         return user;
       },
     }),
-    Google
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   callbacks: {
     // run request to check if user is authorized

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
-import { logIn } from "@/action/auth";
+import { logIn } from "@/action/action";
 
 
 export function SignInButton() {
