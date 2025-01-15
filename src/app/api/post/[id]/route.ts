@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { postSchema } from "@/lib/validations";
+import { checkAuth } from "@/lib/server-util";
 
-export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  const session = await checkAuth();
+  if (!session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const params = await props.params;
   try {
     // Parse the request body
@@ -49,7 +57,15 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
   }
 }
 
-export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  const session = await checkAuth();
+
+  if (!session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const params = await props.params;
   try {
     // Check if the post exists
@@ -71,7 +87,6 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
         id: params.id,
       },
     });
-
     return NextResponse.json({ message: "Post deleted" });
   } catch (error) {
     console.error("Error deleting post:", error);

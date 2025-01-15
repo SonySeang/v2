@@ -3,15 +3,17 @@ import ContentBlock from "@/components/content-block";
 import RecentlyPost from "@/components/home/recently-post";
 
 import prisma from "@/lib/db";
-import { postDataInclude } from "@/lib/include";
+import { getPostDataInclude } from "@/lib/include";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import { PostCard } from "@/components/post-card";
+import { checkAuth } from "@/lib/server-util";
 
 async function Page() {
+  const session = await checkAuth();
   const posts = await prisma.post.findMany({
-    include: postDataInclude,
+    include: getPostDataInclude(session.user.id),
   });
   return (
     <div className="grid grid-cols-3">
@@ -19,15 +21,7 @@ async function Page() {
         <ContentBlock className="m-2">
           {/* <PostCard /> */}
           {posts.length > 0 ? (
-            posts.map((post) => (
-              <Link
-                href={`/dashboard/${post.id}`}
-                key={post.id}
-                className="block mb-4"
-              >
-                <PostCard post={post} />
-              </Link>
-            ))
+            posts.map((post) => <PostCard post={post}  key={post.id}/>)
           ) : (
             <div className="text-center py-12">
               <p className="text-xl text-muted-foreground mb-4">

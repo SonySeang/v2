@@ -23,7 +23,6 @@ async function main() {
     data: {
       email: "example@gmail.com",
       hashedpassword: hashedpassword,
-      name: "example",
     },
   });
 

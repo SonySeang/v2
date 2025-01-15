@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { communitySchema } from "@/lib/validations";
-import { postDataInclude } from "@/lib/include";
+import { getPostDataInclude } from "@/lib/include";
+import { checkAuth } from "@/lib/server-util";
 
 export async function PATCH(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  const session = await checkAuth();
+  if (!session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const params = await props.params;
   try {
     // Parse the request body
@@ -57,6 +62,10 @@ export async function DELETE(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  const session = await checkAuth();
+  if (!session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const params = await props.params;
   try {
     // Check if the community exists
@@ -95,6 +104,7 @@ export async function GET(
 ) {
   const params = await props.params;
   try {
+    const session = await checkAuth();
     // Check if the community exists
     const community = await prisma.community.findUnique({
       where: {
@@ -112,7 +122,7 @@ export async function GET(
       where: {
         communityId: community.id,
       },
-      include: postDataInclude,
+      include: getPostDataInclude(session.user.id),
     });
 
     return NextResponse.json(Newposts);

@@ -1,3 +1,4 @@
+import LikeButton from "@/components/like-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -5,52 +6,20 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { PostData } from "@/lib/include";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Separator } from "@radix-ui/react-select";
 import { formatDistanceToNow } from "date-fns";
-import {
-
-  ThumbsUp,
-  MessageCircle,
-  Share2,
-
-} from "lucide-react";
+import { ThumbsUp, MessageCircle, Share2, Send } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 interface PostDetailProps {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: Date;
-    user: {
-      id: string;
-      name: string | null;
-      image: string | null;
-    };
-    community: {
-      id: string;
-      name: string;
-    };
-    // comments: {
-    //   id: string;
-    //   content: string;
-    //   createdAt: Date;
-    //   User: {
-    //     id: string;
-    //     name: string | null;
-    //     image: string | null;
-    //   };
-    // }[];
-    // _count: {
-    //   likes: number;
-    //   comments: number;
-    // };
-  };
+  post: PostData;
 }
 export default async function PostDetail({ post }: PostDetailProps) {
   return (
-    
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
@@ -59,13 +28,16 @@ export default async function PostDetail({ post }: PostDetailProps) {
             alt={post?.user.name || "User"}
           />
           <AvatarFallback>
-            {post?.user.name ? post.user.name.charAt(0).toUpperCase() : "U"}
+            {post?.user.email ? post.user.email.split("@")[0] : "U"}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <p className="text-sm font-semibold">
-            {post?.user.name || "Anonymous"}
-          </p>
+          <Link
+            href={`/dashboard/profile/${post.user.id}`}
+            className="text-sm font-semibold hover:underline line-clamp-1"
+          >
+            {post?.user.email.split("@")[0] || "Anonymous"}
+          </Link>
           <p className="text-xs text-muted-foreground">
             {post?.createdAt &&
               formatDistanceToNow(new Date(post.createdAt), {
@@ -81,10 +53,15 @@ export default async function PostDetail({ post }: PostDetailProps) {
         </p>
       </CardContent>
       <CardFooter className="flex justify-between border-t pt-4">
-        <Button variant="ghost" size="sm">
-          <ThumbsUp className="w-4 h-4 mr-2" />
-          {/* {post._count.likes} */}like
-        </Button>
+        <LikeButton
+          id={post.id}
+          initialState={{
+            likes: post._count.like,
+            isLikeByUser: post.like.some(
+              (like) => like.userId === post.user.id
+            ),
+          }}
+        />
         <Button variant="ghost" size="sm">
           <MessageCircle className="w-4 h-4 mr-2" />
           {/* {post._count.comments} */}comment
@@ -95,19 +72,7 @@ export default async function PostDetail({ post }: PostDetailProps) {
         </Button>
       </CardFooter>
       <Separator className="my-4" />
-      <CardContent>
-        {/* <form onSubmit={handleCommentSubmit} className="space-y-4">
-          <Textarea
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <Button type="submit" disabled={!newComment.trim()}>
-            <Send className="w-4 h-4 mr-2" />
-            Post Comment
-          </Button>
-        </form> */}
-      </CardContent>
+      <CardContent></CardContent>
     </Card>
   );
 }

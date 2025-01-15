@@ -1,39 +1,27 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { deletePost } from "@/action/action";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from "@radix-ui/react-dialog";
 
-function DeletePostBtn({ id }: { id: string }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="destructive">Delete</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you sure you want to delete?</DialogTitle>
-        </DialogHeader>
-        <DialogDescription></DialogDescription>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              variant="destructive"
-              onClick={async () => await deletePost(id)}
-            />
-            <Button variant="secondary">Cancel</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+interface DeletePostBtnProps {
+  id: string;
 }
 
-export default DeletePostBtn;
+export default function DeletePostBtn({ id }: DeletePostBtnProps) {
+  const router = useRouter();
+  const handleSubmit = async () => {
+    try {
+      await axios.delete(`/api/post/${id}`);
+      router.push("/dashboard/");
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  return (
+    <Button variant="destructive" onClick={handleSubmit}>
+      Delete
+    </Button>
+  );
+}
