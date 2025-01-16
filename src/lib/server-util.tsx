@@ -7,7 +7,7 @@ import { Post, User } from "@prisma/client";
 export async function checkAuth() {
   const session = await auth();
   if (!session?.user) {
-    redirect("/login");
+    redirect("/log-in");
   }
 
   return session;

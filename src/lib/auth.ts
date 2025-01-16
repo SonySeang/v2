@@ -34,10 +34,7 @@ const config = {
         return user;
       },
     }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+
   ],
   callbacks: {
     // run request to check if user is authorized
