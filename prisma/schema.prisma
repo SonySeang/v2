@@ -24,6 +24,7 @@ model Post {
   communityId String
   community   Community @relation(fields: [communityId], references: [id])
   like        like[]
+  comments    Comment[]
 }
 
 //one to many
@@ -58,17 +59,42 @@ model User {
   posts          Post[]
   community      Community[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   like      like[]
+  comments  Comment[]
+  followers Follow[]  @relation("Followers")
+  following Follow[]  @relation("Following")
 }
 
 model like {
   userId String
   postId String
-  user   User   @relation(fields: [userId], references: [id])
-  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@map("likes")
+}
+
+model Comment {
+  id       String   @id @default(cuid())
+  content  String
+  userId   String
+  Post     Post     @relation(fields: [postId], references: [id])
+  postId   String
+  user     User     @relation(fields: [userId], references: [id])
+  createAt DateTime @default(now())
+
+  @@map("comments")
+}
+
+model Follow {
+  followerId  String
+  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
 }

@@ -1,24 +1,18 @@
 "use server";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import {
-  postIdSchema,
-  postSchema,
-} from "@/lib/validations";
+import { postIdSchema, postSchema } from "@/lib/validations";
 import { checkAuth, getPostById } from "@/lib/server-util";
 import { authFormSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
 
-import { redirect } from "next/navigation";
-import {   signIn, signOut } from "@/lib/auth";
-
+import { signIn, signOut } from "@/lib/auth";
 
 export async function logIn(formData: unknown): Promise<void> {
   if (!(formData instanceof FormData)) {
     throw new Error("Invalid form data");
   }
   await signIn("credentials", formData);
-  redirect("/dashboard");
 }
 
 export async function logOut(): Promise<void> {
@@ -37,8 +31,6 @@ export async function signUp(formData: unknown): Promise<void> {
   }
 
   const { email, password } = validationFormDataObject.data;
-
-  // Hash the password before saving to the database
   const hashedpassword = await bcrypt.hash(password, 10);
 
   // Save the user to the database (example using Prisma)
@@ -52,8 +44,6 @@ export async function signUp(formData: unknown): Promise<void> {
   // Automatically log in the user after sign-up
   await signIn("credentials", formData);
 }
-
-
 
 export async function addPost(postData: unknown) {
   const validation = postSchema.safeParse(postData);

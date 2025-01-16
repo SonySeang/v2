@@ -4,8 +4,6 @@ import { communitySchema } from "@/lib/validations";
 import { checkAuth } from "@/lib/server-util";
 import { communityDataInclude } from "@/lib/include";
 
-
-
 export async function POST(request: NextRequest) {
   const session = await checkAuth();
   if (!session.user) {
@@ -54,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(community, { status: 201 });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to create community" },
       { status: 500 }

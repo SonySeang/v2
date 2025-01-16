@@ -14,14 +14,16 @@ async function Page() {
   const session = await checkAuth();
   const posts = await prisma.post.findMany({
     include: getPostDataInclude(session.user.id),
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return (
     <div className="grid grid-cols-3">
       <div className="col-start-1 col-span-2">
         <ContentBlock className="m-2">
-          {/* <PostCard /> */}
           {posts.length > 0 ? (
-            posts.map((post) => <PostCard post={post}  key={post.id}/>)
+            posts.map((post) => <PostCard post={post} key={post.id} />)
           ) : (
             <div className="text-center py-12">
               <p className="text-xl text-muted-foreground mb-4">

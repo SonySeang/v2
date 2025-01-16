@@ -1,5 +1,7 @@
 import z from "zod";
 
+const requiredString = z.string().trim().min(1, "Required");
+
 export const postIdSchema = z.string().cuid();
 export const postSchema = z.object({
   title: z.string().nonempty("Title is required"),
@@ -42,3 +44,7 @@ export const UserSchema = z.object({
   hashedpassword: z.string(),
   name: z.string(),
 })
+
+export const createCommentSchema = z.object({
+  content : requiredString,
+}) 

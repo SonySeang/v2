@@ -4,13 +4,12 @@ import { FaCalendar as Calendar } from "react-icons/fa";
 
 import { User } from "@prisma/client";
 
-
 interface DisplayUserDataProps {
   user: User;
 }
 
 export default function DisplayUserData({ user }: DisplayUserDataProps) {
-  const { email,  createdAt  ,  } = user;
+  const { email, createdAt } = user;
 
   return (
     <Card>

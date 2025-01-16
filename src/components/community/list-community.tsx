@@ -25,7 +25,7 @@ export default function ListCommunity() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 m-5">
       {communities?.map((community) => {
-        // Calculate the number of unique users
+        
         const uniqueUsers = new Set(community.posts.map((post) => post.user.id))
           .size;
         return (
@@ -36,14 +36,16 @@ export default function ListCommunity() {
               router.push(`/dashboard/community/list/${community.id}`);
             }}
           >
-              <CardHeader>
-                <CardTitle>{community.name}</CardTitle>
-              </CardHeader>
-              <CardFooter className="flex justify-between">
-                <p>Posts: {community.posts.length}</p>
-                <p>Follower : {uniqueUsers}</p>
-                <Link href={`/dashboard/community/list/${community.id}`}>Click here</Link>
-              </CardFooter>
+            <CardHeader>
+              <CardTitle>{community.name}</CardTitle>
+            </CardHeader>
+            <CardFooter className="flex justify-between">
+              <p>Posts: {community.posts.length}</p>
+              <p>Follower : {uniqueUsers}</p>
+              <Link href={`/dashboard/community/list/${community.id}`}>
+                Click here
+              </Link>
+            </CardFooter>
           </Card>
         );
       })}

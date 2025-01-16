@@ -50,7 +50,7 @@ const config = {
         return false;
       }
       if (isLoggingIn && !isTryingToAccessApp) {
-        return Response.redirect(new URL("/dashboard", request.nextUrl));
+        return Response.redirect(new URL("/dashboard/", request.nextUrl));
       }
       if (!isTryingToAccessApp) {
         return false;

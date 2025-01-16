@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const routes = [
   { label: "Home", path: "/dashboard" },
   { label: "Community", path: "/dashboard/community" },
+  { label: "Following", path: "/dashboard/following" },
   { label: "Profile", path: "/dashboard/profile" },
 ];
 const icons = [
