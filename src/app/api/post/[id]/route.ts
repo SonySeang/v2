@@ -52,7 +52,7 @@ export async function PATCH(
     console.error("Error updating post:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 } // Internal Server Error
+      { status: 500 }
     );
   }
 }

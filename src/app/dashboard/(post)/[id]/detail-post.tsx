@@ -8,14 +8,13 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { PostData } from "@/lib/include";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { Separator } from "@radix-ui/react-select";
+
 import { formatDistanceToNow } from "date-fns";
-import { MessageCircle, Share2, Send } from "lucide-react";
+import { MessageCircle, Share2 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 
 interface PostDetailProps {
   post: PostData;
