@@ -3,7 +3,6 @@
 import AuthForm from "@/components/auth/auth-form";
 import Link from "next/link";
 import React from "react";
-import GoogleLogin from "../_component/GoogleLogin";
 
 export default function LogIn() {
   return (
@@ -17,7 +16,6 @@ export default function LogIn() {
         </Link>
         .
       </p>
-      <GoogleLogin />
     </main>
   );
 }
