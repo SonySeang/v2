@@ -94,7 +94,7 @@ export function PostCard({ post }: PostCardProps) {
         />
         <Button variant="ghost" size="sm">
           <MessageCircle className="w-4 h-4 mr-2" />
-          {/* {post._count.comments} */} comment
+          {post._count.comments}
         </Button>
         <Button variant="ghost" size="sm">
           <Share2 className="w-4 h-4 mr-2" />

@@ -26,7 +26,7 @@ import FormButton from "./form-button";
 import { Post } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import useCommunity from "@/lib/hook";
+import { useCommunity } from "@/lib/hook";
 
 interface PostFormProps {
   actionType: "edit" | "create";

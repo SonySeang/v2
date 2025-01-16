@@ -21,13 +21,21 @@ export default async function CommunityPage(props: CommunityPageProps) {
         include: {
           user: true,
           like: true,
+          comments: {
+            include: {
+              user: true,
+            },
+          },
+
           _count: {
             select: {
               like: true,
+              comments: true,
             },
           },
         },
       },
+      category: true,
       user: true,
     },
   });
@@ -43,6 +51,7 @@ export default async function CommunityPage(props: CommunityPageProps) {
           name={community.name}
           creatorEmail={community.user.email}
           postCount={community.posts.length}
+          categoryName={community.category.name}
         />
         <div className="grid gap-6">
           {community.posts.map((post) => (

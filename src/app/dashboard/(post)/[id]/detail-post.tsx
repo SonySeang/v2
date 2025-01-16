@@ -1,3 +1,5 @@
+"use client";
+import Comments from "@/components/comment/comment";
 import LikeButton from "@/components/like-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,14 +13,14 @@ import { PostData } from "@/lib/include";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Separator } from "@radix-ui/react-select";
 import { formatDistanceToNow } from "date-fns";
-import { ThumbsUp, MessageCircle, Share2, Send } from "lucide-react";
+import { MessageCircle, Share2, Send } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 interface PostDetailProps {
   post: PostData;
 }
-export default async function PostDetail({ post }: PostDetailProps) {
+export default function PostDetail({ post }: PostDetailProps) {
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader className="flex flex-row items-center gap-4">
@@ -46,13 +48,13 @@ export default async function PostDetail({ post }: PostDetailProps) {
           </p>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         <h1 className="text-2xl font-bold">{post?.title}</h1>
         <p className="text-muted-foreground whitespace-pre-wrap">
           {post?.content}
         </p>
       </CardContent>
-      <CardFooter className="flex justify-between border-t pt-4">
+      <CardFooter className="flex justify-between border-t pt-2">
         <LikeButton
           id={post.id}
           initialState={{
@@ -62,17 +64,28 @@ export default async function PostDetail({ post }: PostDetailProps) {
             ),
           }}
         />
-        <Button variant="ghost" size="sm">
-          <MessageCircle className="w-4 h-4 mr-2" />
-          {/* {post._count.comments} */}comment
-        </Button>
+        <CommentButton post={post} />
         <Button variant="ghost" size="sm">
           <Share2 className="w-4 h-4 mr-2" />
           Share
         </Button>
       </CardFooter>
-      <Separator className="my-4" />
-      <CardContent></CardContent>
+      <CardContent className="h-full">
+        <Comments post={post} />
+      </CardContent>
     </Card>
+  );
+}
+
+interface CommentProps {
+  post: PostData;
+}
+
+function CommentButton({ post }: CommentProps) {
+  return (
+    <Button variant="ghost" size="sm">
+      <MessageCircle className="w-4 h-4 mr-2" />
+      {post._count.comments}
+    </Button>
   );
 }
