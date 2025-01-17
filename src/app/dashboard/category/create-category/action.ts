@@ -20,7 +20,7 @@ export async function createCategory(input: { name: string }) {
     const newCategory = await prisma.category.create({
       data: {
         name,
-        user: {
+        User: {
           connect: {
             id: session.user.id,
           },

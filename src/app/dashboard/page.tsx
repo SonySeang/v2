@@ -30,7 +30,7 @@ async function Page() {
                 No posts yet. Be the first to create one!
               </p>
               <Button asChild>
-                <Link href="/post/new">
+                <Link href="/dashboard/create-post">
                   <PlusCircle className="mr-2 h-4 w-4" /> Create Your First Post
                 </Link>
               </Button>
