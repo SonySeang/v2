@@ -25,6 +25,8 @@ export const categorySchema = z.object({
   name: z.string().min(1, { message: "Please give your category a name" }),
 });
 
+export type TCategoryForm = z.infer<typeof categorySchema>;
+
 export const authFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(2, "Password must be at least 6 characters"),

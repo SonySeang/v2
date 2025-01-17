@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
   const newCategory = await prisma.category.create({
     data: {
       name,
+      user: {
+        connect: {
+          id: session.user.id,
+        },
+      },
     },
   });
   return NextResponse.json(newCategory, { status: 201 });

@@ -4,25 +4,35 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Create User data
+  const hashedPassword = await bcrypt.hash("example", 10);
+  const user = await prisma.user.create({
+    data: {
+      email: "example@gmail.com",
+      hashedpassword: hashedPassword,
+    },
+  });
+
   // Create Category data
   const techCategory = await prisma.category.create({
     data: {
       name: "Technology",
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
     },
   });
 
   const scienceCategory = await prisma.category.create({
     data: {
       name: "Science",
-    },
-  });
-
-  // Create User data
-  const hashedpassword = await bcrypt.hash("example", 10);
-  const user = await prisma.user.create({
-    data: {
-      email: "example@gmail.com",
-      hashedpassword: hashedpassword,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
     },
   });
 
@@ -43,23 +53,7 @@ async function main() {
     },
   });
 
-  // Create Posts data
-  await prisma.post.createMany({
-    data: [
-      {
-        title: "Ai",
-        content: "Ai is the future",
-        communityId: community1.id, // Associate with Tech Community
-        userId: user.id, // Associate with the created user
-      },
-      {
-        title: "ML",
-        content: "ML is the future",
-        communityId: community2.id, // Associate with Science Community
-        userId: user.id, // Associate with the created user
-      },
-    ],
-  });
+  console.log({ user, techCategory, scienceCategory, community1, community2 });
 }
 
 main()
