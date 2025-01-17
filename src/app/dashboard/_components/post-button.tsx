@@ -27,7 +27,7 @@ function PostButton({ actionType, param }: PostButtonProps) {
         variant="secondary"
         onClick={() => router.push("/dashboard/create-post")}
       >
-        Create
+        Create Post
       </Button>
     );
   }
