@@ -34,6 +34,8 @@ model Category {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   communities Community[]
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
 }
 
 model Community {
@@ -59,12 +61,13 @@ model User {
   posts          Post[]
   community      Community[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   like      like[]
   comments  Comment[]
-  followers Follow[]  @relation("Followers")
-  following Follow[]  @relation("Following")
+  followers Follow[]   @relation("Followers")
+  following Follow[]   @relation("Following")
+  Category  Category[]
 }
 
 model like {
