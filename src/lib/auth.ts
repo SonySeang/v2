@@ -3,7 +3,6 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "./server-util";
 import { authFormSchema } from "./validations";
-import Google from "next-auth/providers/google";
 
 const config = {
   pages: {
@@ -34,7 +33,6 @@ const config = {
         return user;
       },
     }),
-
   ],
   callbacks: {
     // run request to check if user is authorized
@@ -61,13 +59,16 @@ const config = {
       if (user) {
         // on sign in
         token.userId = <string>user.id;
+        token.role = <string>user.role;
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session.user) {
         session.user.id = token.userId;
+        session.user.role = token.role;
       }
+
       return session;
     },
   },

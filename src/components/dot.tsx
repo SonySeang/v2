@@ -21,9 +21,11 @@ export default async function Dot({ data }: DotProp) {
     },
   });
   const session = await checkAuth();
-
-  if (!session.user || session.user.id !== post?.userId) {
-    return null
+  if (!session) {
+    return null;
+  }
+  if (post?.userId !== session.user.id) {
+    return null;
   }
   return (
     <Popover>
@@ -32,7 +34,7 @@ export default async function Dot({ data }: DotProp) {
       </PopoverTrigger>
       <PopoverContent className="flex flex-col gap-4 w-full border border-gray-200 rounded-md p-4">
         <div>
-          <EditButton data={data.id}/>
+          <EditButton data={data.id} />
         </div>
         <div>
           <DeletePostBtn id={data.id} />

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const { name } = body;
 
   const session = await checkAuth();
-  if (session.user.role !== "admin") {
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

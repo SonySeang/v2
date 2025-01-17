@@ -15,6 +15,10 @@ async function DetailPost(props: { params: Promise<{ id: string }> }) {
     include: getPostDataInclude(session.user.id),
   });
 
+  if (!session) {
+    return <h1>Unauthorized</h1>;
+  }
+
   if (!post) {
     return <div>Post not found</div>;
   }
@@ -25,7 +29,7 @@ async function DetailPost(props: { params: Promise<{ id: string }> }) {
         <PostDetail post={post} />
       </ContentBlock>
       <ContentBlock className="w-1/4">
-        <Dot data={post} />
+        {session.user.role === "admin" && <Dot data={post} />}
       </ContentBlock>
     </div>
   );

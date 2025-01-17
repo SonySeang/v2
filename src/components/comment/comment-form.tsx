@@ -36,7 +36,6 @@ export default function CommentsForm({ post }: CommentProps) {
       <Textarea
         placeholder="Comment"
         className="w-full"
-        rows={3}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         autoFocus

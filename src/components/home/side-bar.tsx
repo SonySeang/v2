@@ -10,6 +10,7 @@ const routes = [
   { label: "Community", path: "/dashboard/community" },
   { label: "Following", path: "/dashboard/following" },
   { label: "Profile", path: "/dashboard/profile" },
+  { label: "Category", path: "/dashboard/category" },
 ];
 const icons = [
   <GoHome key="home" className="h-6 w-6" />,
