@@ -9,7 +9,7 @@ export async function createCategory(input: { name: string }) {
   const { name } = categorySchema.parse(input);
 
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user) {
     return {
       error: "Unauthorized",
       status: 401,

@@ -61,6 +61,7 @@ model User {
   posts          Post[]
   community      Community[]
   category       Category[]
+  hasAcess      Boolean     @default(false)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

@@ -7,6 +7,7 @@ import React from "react";
 export default function LogIn() {
   return (
     <main>
+      
       <AuthForm actionType="login" />
       <p>
         No account?
