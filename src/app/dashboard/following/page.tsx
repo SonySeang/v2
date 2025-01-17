@@ -26,7 +26,7 @@ export default function Following() {
   if (status === "error") return <div>Error fetching posts</div>;
 
   if (posts.length === 0) {
-    return <div>No posts to show</div>;
+    return <div className="text-center">You haven't Follow Anyone Yet</div>;
   }
 
   return (

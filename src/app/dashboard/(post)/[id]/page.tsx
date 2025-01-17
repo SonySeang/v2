@@ -23,13 +23,17 @@ async function DetailPost(props: { params: Promise<{ id: string }> }) {
     return <div>Post not found</div>;
   }
 
+  const canSeeDot =
+    post.userId === session.user.id &&
+    session.user.id === "cm60866ca0001rx2ms5lax3lh";
   return (
     <div className="flex flex-row">
       <ContentBlock className="w-full items-start">
         <PostDetail post={post} />
       </ContentBlock>
+      <br />
       <ContentBlock className="w-1/4">
-        {session.user.role === "admin" && <Dot data={post} />}
+        {canSeeDot && <Dot data={{ id: post.id }} />}
       </ContentBlock>
     </div>
   );

@@ -44,6 +44,10 @@ const config = {
       if (!isLoggingIn && isTryingToAccessApp) {
         return false;
       }
+      
+      if (isLoggingIn && isTryingToAccessApp) {
+        return true;
+      }
       if (isLoggingIn && !isTryingToAccessApp) {
         return Response.redirect(new URL("/dashboard/", request.nextUrl));
       }
@@ -59,16 +63,13 @@ const config = {
       if (user) {
         // on sign in
         token.userId = <string>user.id;
-        token.role = <string>user.role;
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session.user) {
         session.user.id = token.userId;
-        session.user.role = token.role;
       }
-
       return session;
     },
   },

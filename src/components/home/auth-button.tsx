@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { logIn } from "@/action/action";
 
-
 export function SignInButton() {
   const { data: session, status } = useSession();
   if (status === "loading") {
