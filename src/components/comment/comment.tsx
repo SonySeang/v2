@@ -32,6 +32,8 @@ export default function Comments({ post }: CommentProps) {
   return (
     <div>
       <CommentsForm post={post} />
+      <h1 className="text-xl font-semibold mb-2">comment </h1>
+
       <div className="space-y-4">
         {comments.map((comment) => (
           <CommentList key={comment.id} comment={comment} />

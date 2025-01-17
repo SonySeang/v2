@@ -7,12 +7,19 @@ import { authFormSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
 
 import { signIn, signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export async function logIn(formData: unknown): Promise<void> {
   if (!(formData instanceof FormData)) {
     throw new Error("Invalid form data");
   }
-  await signIn("credentials", formData);
+
+  const result = await signIn("credentials", formData);
+
+  if (!result) {
+    throw new Error("Invalid credentials");
+  }
+  redirect("/dashboard/profile");
 }
 
 export async function logOut(): Promise<void> {

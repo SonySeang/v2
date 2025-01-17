@@ -71,7 +71,9 @@ export default function PostDetail({ post }: PostDetailProps) {
         </Button>
       </CardFooter>
       <CardContent className="h-full">
+        
         <Comments post={post} />
+
       </CardContent>
     </Card>
   );

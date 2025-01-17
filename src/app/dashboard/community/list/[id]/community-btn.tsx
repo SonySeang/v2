@@ -5,18 +5,16 @@ import { Button } from "@/components/ui/button";
 
 interface CommunityButtonProps {
   type: "edit" | "delete";
-  params: { id: string };
+  id?: string;
 }
-export default function CommunityButton({
-  type,
-  params,
-}: CommunityButtonProps) {
+export default function CommunityButton({ type, id }: CommunityButtonProps) {
   const router = useRouter();
   if (type === "edit") {
     return (
       <Button
+        className="w-full"
         variant="secondary"
-        onClick={() => router.push(`/dashboard/community/edit/${params.id}`)}
+        onClick={() => router.push(`/dashboard/community/edit/${id}`)}
       >
         Edit
       </Button>
@@ -25,7 +23,7 @@ export default function CommunityButton({
   return (
     <Button
       variant="destructive"
-      onClick={() => router.push(`/dashboard/community/delete${params}`)}
+      onClick={() => router.push(`/dashboard/community/delete${id}`)}
     >
       Delete
     </Button>

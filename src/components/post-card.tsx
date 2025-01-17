@@ -48,9 +48,14 @@ export function PostCard({ post }: PostCardProps) {
             {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
           </p>
         </div>
-        <Badge variant="secondary" className="ml-auto">
-          {post.community.name}
-        </Badge>
+        <div className="flex flex-col gap-2 justify-between ml-auto mt-2">
+          <Badge variant="secondary" className="ml-auto">
+            {post.community.category.name}
+          </Badge>
+          <Badge variant="secondary" className="ml-auto">
+            {post.community.name}
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent
         className="space-y-2 hover:bg-gray-100 p-4 cursor-pointer"

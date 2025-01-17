@@ -4,6 +4,7 @@ import { GoHome, GoSearch, GoListUnordered, GoPeople } from "react-icons/go";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import CategoryButton from "../category/category-btn";
 
 const routes = [
   { label: "Home", path: "/dashboard" },
@@ -39,6 +40,7 @@ function SideBar() {
           </Link>
         </li>
       ))}
+ 
     </ul>
   );
 }

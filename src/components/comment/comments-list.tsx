@@ -9,7 +9,7 @@ interface CommentProps {
 
 export default function CommentList({ comment }: CommentProps) {
   return (
-    <Card className="w-full">
+    <Card className="w-full ">
       <CardHeader className="flex flex-row items-center space-x-4 pb-2">
         <Avatar>
           <AvatarImage

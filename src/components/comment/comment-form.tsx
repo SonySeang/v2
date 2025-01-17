@@ -32,7 +32,7 @@ export default function CommentsForm({ post }: CommentProps) {
     );
   }
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="flex flex-row gap-2 mb-2">
       <Textarea
         placeholder="Comment"
         className="w-full"
@@ -42,7 +42,7 @@ export default function CommentsForm({ post }: CommentProps) {
       />
       <Button
         variant="destructive"
-        className="mt-2"
+        className="mt-6 "
         disabled={!input.trim() || mutation.isPending}
       >
         {!mutation.isPending ? (

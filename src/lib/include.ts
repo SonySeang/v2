@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { tuple } from "zod";
 
 export function getUserDataSelect(loggedInUserId: string) {
   return {
@@ -16,6 +17,7 @@ export function getUserDataSelect(loggedInUserId: string) {
     },
     _count: {
       select: {
+        posts: true,
         followers: true,
       },
     },
@@ -67,13 +69,18 @@ export const postDataInclude = {
       },
     },
   },
+
   _count: {
     select: {
       like: true,
       comments: true,
     },
   },
-  community: true,
+  community: {
+    include: {
+      category: true,
+    },
+  },
 } satisfies Prisma.PostInclude;
 
 export const categoryDataSelect = {
@@ -81,6 +88,25 @@ export const categoryDataSelect = {
   name: true,
 } satisfies Prisma.CategorySelect;
 
+export const categoryDataInclude = {
+  communities: {
+    select: {
+      id: true,
+      name: true,
+      posts: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          createdAt: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.CategoryInclude;
+export type CategoryData = Prisma.CategoryGetPayload<{
+  include: typeof categoryDataInclude;
+}>;
 export type PostData = Prisma.PostGetPayload<{
   include: typeof postDataInclude;
 }>;
@@ -205,7 +231,11 @@ export function getPostDataInclude(loggedInUserId: string) {
     user: {
       select: getUserDataSelect(loggedInUserId),
     },
-    community: true,
+    community: {
+      include : {
+        category: true,
+      },
+    },
     like: {
       where: {
         userId: loggedInUserId,

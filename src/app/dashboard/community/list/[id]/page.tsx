@@ -2,8 +2,8 @@ import React from "react";
 import prisma from "@/lib/db";
 import { checkAuth } from "@/lib/server-util";
 import ContentBlock from "@/components/content-block";
-import { CommunityHeader } from "@/components/community/community-header";
 import { CommunityCard } from "@/components/community/community-card";
+import { CommunityHeader } from "@/components/community/community-header";
 
 interface CommunityPageProps {
   params: Promise<{ id: string }>;
@@ -52,6 +52,8 @@ export default async function CommunityPage(props: CommunityPageProps) {
           creatorEmail={community.user.email}
           postCount={community.posts.length}
           categoryName={community.category.name}
+          communityId={{ id: community.id }}
+          community={community}
         />
         <div className="grid gap-6">
           {community.posts.map((post) => (

@@ -3,6 +3,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { logIn, signUp } from "@/action/action";
+import AuthButton from "./auth-btn";
 
 interface AuthFormProps {
   actionType: "login" | "signup";
@@ -32,9 +33,11 @@ export default function AuthForm({ actionType }: AuthFormProps) {
             maxLength={100}
           />
         </div>
-        <Button className="mt-2 my-2 rounded-xl" type="submit">
-          {actionType === "login" ? "Sign in" : "Sign up"}
-        </Button>
+        {actionType === "login" ? (
+          <AuthButton actionType="login" />
+        ) : (
+          <AuthButton actionType="signup" />
+        )}
       </form>
     </div>
   );
