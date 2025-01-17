@@ -39,17 +39,24 @@ const config = {
     authorized: ({ auth, request }) => {
       const isLoggingIn = Boolean(auth?.user);
       const isTryingToAccessApp =
-        request.nextUrl.pathname.includes("/dashboard");
+        request.nextUrl.pathname.includes("/dashboard/");
 
       if (!isLoggingIn && isTryingToAccessApp) {
         return false;
       }
-      
-      if (isLoggingIn && isTryingToAccessApp) {
+
+      if (isLoggingIn && isTryingToAccessApp && auth?.user.hasAcess) {
         return true;
       }
       if (isLoggingIn && !isTryingToAccessApp) {
-        return Response.redirect(new URL("/dashboard/", request.nextUrl));
+        if (
+          request.nextUrl.pathname.includes("/log-in") ||
+          request.nextUrl.password.includes("/sign-up")
+        ) {
+          return Response.redirect(new URL("/dashboard/", request.nextUrl));
+        }
+
+        return true;
       }
       if (!isTryingToAccessApp) {
         return false;
@@ -62,13 +69,17 @@ const config = {
     jwt: ({ token, user }) => {
       if (user) {
         // on sign in
-        token.userId = <string>user.id;
+        if (user.id) {
+          token.userId = user.id;
+        }
+        token.hasAccess = user.hasAcess;
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session.user) {
         session.user.id = token.userId;
+        session.user.hasAcess = token.hasAccess as boolean;
       }
       return session;
     },

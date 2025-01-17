@@ -11,8 +11,11 @@ interface AuthFormProps {
 
 export default function AuthForm({ actionType }: AuthFormProps) {
   return (
-    <div>
-      <form action={actionType === "login" ? logIn : signUp}>
+    <div className="text-5xl  border-2 rounded-3xl ">
+      <form
+        action={actionType === "login" ? logIn : signUp}
+        className="mx-10 my-6 "
+      >
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input

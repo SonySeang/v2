@@ -27,6 +27,9 @@ export default async function Dot({ data }: DotProp) {
   if (post?.userId !== session.user.id) {
     return null;
   }
+
+
+
   return (
     <Popover>
       <PopoverTrigger asChild>
